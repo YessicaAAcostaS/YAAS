@@ -1,0 +1,300 @@
+MySQL Shell 8.0.17
+
+Copyright (c) 2016, 2019, Oracle and/or its affiliates. All rights reserved.
+Oracle is a registered trademark of Oracle Corporation and/or its affiliates.
+Other names may be trademarks of their respective owners.
+
+Type '\help' or '\?' for help; '\quit' to exit.
+MySQL JS> \sql
+Switching to SQL mode... Commands end with ;
+MySQL SQL> \connect --mc root@localhost
+Creating a Classic session to 'root@localhost'
+Fetching schema names for autocompletion... Press ^C to stop.
+Your MySQL connection id is 8
+Server version: 8.0.17 MySQL Community Server - GPL
+No default schema selected; type \use <schema> to set one.
+MySQL [localhost ssl] SQL> \use eva_1
+Default schema set to `eva_1`.
+Fetching table and column names from `eva_1` for auto-completion... Press ^C to
+stop.
+MySQL [localhost ssl/eva_1] SQL> show tables;
++------------------+
+| Tables_in_eva_1  |
++------------------+
+| carreras         |
+| country          |
+| materias         |
+| paises           |
+| prueba           |
+| prueba_copia     |
+| prueba_copia_dat |
++------------------+
+7 rows in set (0.0107 sec)
+MySQL [localhost ssl/eva_1] SQL> desc materias;
++----------+-------------+------+-----+---------+-------+
+| Field    | Type        | Null | Key | Default | Extra |
++----------+-------------+------+-----+---------+-------+
+| nombre   | varchar(50) | YES  | UNI | TBD     |       |
+| creditos | int(11)     | YES  |     | 5       |       |
++----------+-------------+------+-----+---------+-------+
+2 rows in set (0.0195 sec)
+MySQL [localhost ssl/eva_1] SQL> show create table materias;
++----------+--------------------------------------------------------------------
+--------------------------------------------------------------------------------
+---------------------------------------------------+
+| Table    | Create Table
+
+                                                   |
++----------+--------------------------------------------------------------------
+--------------------------------------------------------------------------------
+---------------------------------------------------+
+| materias | CREATE TABLE `materias` (
+  `nombre` varchar(50) DEFAULT 'TBD',
+  `creditos` int(11) DEFAULT '5',
+  UNIQUE KEY `nombre` (`nombre`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci |
++----------+--------------------------------------------------------------------
+--------------------------------------------------------------------------------
+---------------------------------------------------+
+1 row in set (0.3718 sec)
+MySQL [localhost ssl/eva_1] SQL> select * from carreras;
++--------+
+| nombre |
++--------+
+| Info   |
++--------+
+1 row in set (0.1931 sec)
+MySQL [localhost ssl/eva_1] SQL> insert into carreras values();
+ERROR: 1364 (HY000): Field 'nombre' doesn't have a default value
+MySQL [localhost ssl/eva_1] SQL> insert into carreras values('Info');
+ERROR: 1062 (23000): Duplicate entry 'Info' for key 'nombre'
+MySQL [localhost ssl/eva_1] SQL> create table subject(
+                              ->
+                              -> );
+ERROR: 1064 (42000): You have an error in your SQL syntax; check the manual that
+ corresponds to your MySQL server version for the right syntax to use near ')' a
+t line 2
+MySQL [localhost ssl/eva_1] SQL> create table subjects(
+                              -> name varchar(50) not null key,
+                              -> credits int not null default 5);
+Query OK, 0 rows affected (1.6071 sec)
+MySQL [localhost ssl/eva_1] SQL> show create table subjects;
++----------+--------------------------------------------------------------------
+--------------------------------------------------------------------------------
+------------------------------------------+
+| Table    | Create Table
+
+                                          |
++----------+--------------------------------------------------------------------
+--------------------------------------------------------------------------------
+------------------------------------------+
+| subjects | CREATE TABLE `subjects` (
+  `name` varchar(50) NOT NULL,
+  `credits` int(11) NOT NULL DEFAULT '5',
+  PRIMARY KEY (`name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci |
++----------+--------------------------------------------------------------------
+--------------------------------------------------------------------------------
+------------------------------------------+
+1 row in set (0.0079 sec)
+MySQL [localhost ssl/eva_1] SQL> insert into subjects
+                              -> values('TDB',4),('EDD',5),('ADC');
+ERROR: 1136 (21S01): Column count doesn't match value count at row 3
+MySQL [localhost ssl/eva_1] SQL> insert into subjects values('TDB',4),('EDD',5),
+('ADC',5);
+Query OK, 3 rows affected (0.3235 sec)
+
+Records: 3  Duplicates: 0  Warnings: 0
+MySQL [localhost ssl/eva_1] SQL> insert into subjects values('TDB',4),('EDD',5),
+
+MySQL [localhost ssl/eva_1] SQL> ;
+ERROR: 1065 (42000): Query was empty
+MySQL [localhost ssl/eva_1] SQL> select * from subjects;
++------+---------+
+| name | credits |
++------+---------+
+| ADC  |       5 |
+| EDD  |       5 |
+| TDB  |       4 |
++------+---------+
+3 rows in set (0.0023 sec)
+MySQL [localhost ssl/eva_1] SQL> insert into subjects
+                              -> values('ARQ');
+ERROR: 1136 (21S01): Column count doesn't match value count at row 1
+MySQL [localhost ssl/eva_1] SQL> INSERT INTO SUBJECTS VALUES('ADC');
+ERROR: 1136 (21S01): Column count doesn't match value count at row 1
+MySQL [localhost ssl/eva_1] SQL> create table materias2(
+                              -> nombre varchar(50) not null,
+                              -> creditos int default 5,
+                              -> carrera varchar(50) not null,
+                              -> primary key(nombre, carrera));
+Query OK, 0 rows affected (0.6097 sec)
+MySQL [localhost ssl/eva_1] SQL> show create table materias2;
++-----------+-------------------------------------------------------------------
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+----+
+| Table     | Create Table
+
+
+    |
++-----------+-------------------------------------------------------------------
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+----+
+| materias2 | CREATE TABLE `materias2` (
+  `nombre` varchar(50) NOT NULL,
+  `creditos` int(11) DEFAULT '5',
+  `carrera` varchar(50) NOT NULL,
+  PRIMARY KEY (`nombre`,`carrera`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci |
++-----------+-------------------------------------------------------------------
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+----+
+1 row in set (0.0110 sec)
+MySQL [localhost ssl/eva_1] SQL> insert into materias2
+                              -> values('EDD', 5,'SISTEMAS');
+Query OK, 1 row affected (0.1091 sec)
+MySQL [localhost ssl/eva_1] SQL> insert into materias2 values('EDD', 5,'INFORMAT
+ICA');
+Query OK, 1 row affected (0.1765 sec)
+MySQL [localhost ssl/eva_1] SQL> insert into materias2 values('EDD', 5,'ATICA');
+                                 insert into materias2 values('EDD', 5,'ARQUI');
+                                 insert into materias2 values('EDD', 5,'ARQUITEC
+TURA');
+Query OK, 1 row affected (0.1239 sec)
+MySQL [localhost ssl/eva_1] SQL> insert into materias2 values('EDD', 5,'ARQUITEC
+TURA');
+ERROR: 1062 (23000): Duplicate entry 'EDD-ARQUITECTURA' for key 'PRIMARY'
+MySQL [localhost ssl/eva_1] SQL> show tables;
++------------------+
+| Tables_in_eva_1  |
++------------------+
+| carreras         |
+| country          |
+| materias         |
+| materias2        |
+| paises           |
+| prueba           |
+| prueba_copia     |
+| prueba_copia_dat |
+| subjects         |
++------------------+
+9 rows in set (0.0114 sec)
+MySQL [localhost ssl/eva_1] SQL> create table alumnos(
+                              -> no_control int not null auto_increment key,
+                              -> nombre varchar(50));
+Query OK, 0 rows affected (0.7566 sec)
+MySQL [localhost ssl/eva_1] SQL> insert into alumnos(
+                              -> nombre)
+                              -> values('Yessica', 'Eduardo', 'Esteban', Erika''
+                                 values('Yessica', 'Eduardo', 'Esteban', Erika')
+                                 values('Yessica', 'Eduardo', 'Esteban', Erika')
+;
+                              '>
+                              '> ;
+                              '>
+                              '> ;
+                              '> );
+                              '> ,);
+                              '> create table alumnos( no_control int not null a
+uto_increment key, nombre varchar(50));
+                              '> create table alumnos( no_control int not null a
+uto_increment key, nombre varchar(50)); ');
+ERROR: 1064 (42000): You have an error in your SQL syntax; check the manual that
+ corresponds to your MySQL server version for the right syntax to use near '');
+;
+;
+);
+,);
+create table alumnos( no_control int not null auto_increment key,' at line 3
+MySQL [localhost ssl/eva_1] SQL> insert into alumnos(nombre)
+                              -> values('Yessica','Eduardo','Erika');
+ERROR: 1136 (21S01): Column count doesn't match value count at row 1
+MySQL [localhost ssl/eva_1] SQL> delete from alumnos
+                              -> where no_control = 3;
+Query OK, 0 rows affected (0.0713 sec)
+MySQL [localhost ssl/eva_1] SQL> show create table alumnos;
++---------+---------------------------------------------------------------------
+--------------------------------------------------------------------------------
+----------------------------------------------------------+
+| Table   | Create Table
+
+                                                          |
++---------+---------------------------------------------------------------------
+--------------------------------------------------------------------------------
+----------------------------------------------------------+
+| alumnos | CREATE TABLE `alumnos` (
+  `no_control` int(11) NOT NULL AUTO_INCREMENT,
+  `nombre` varchar(50) DEFAULT NULL,
+  PRIMARY KEY (`no_control`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci |
++---------+---------------------------------------------------------------------
+--------------------------------------------------------------------------------
+----------------------------------------------------------+
+1 row in set (0.0042 sec)
+MySQL [localhost ssl/eva_1] SQL> show tables;
++------------------+
+| Tables_in_eva_1  |
++------------------+
+| alumnos          |
+| carreras         |
+| country          |
+| materias         |
+| materias2        |
+| paises           |
+| prueba           |
+| prueba_copia     |
+| prueba_copia_dat |
+| subjects         |
++------------------+
+10 rows in set (0.0144 sec)
+MySQL [localhost ssl/eva_1] SQL> show table alumnos;
+ERROR: 1064 (42000): You have an error in your SQL syntax; check the manual that
+ corresponds to your MySQL server version for the right syntax to use near 'alum
+nos' at line 1
+MySQL [localhost ssl/eva_1] SQL> show create table alumnos;
++---------+---------------------------------------------------------------------
+--------------------------------------------------------------------------------
+----------------------------------------------------------+
+| Table   | Create Table
+
+                                                          |
++---------+---------------------------------------------------------------------
+--------------------------------------------------------------------------------
+----------------------------------------------------------+
+| alumnos | CREATE TABLE `alumnos` (
+  `no_control` int(11) NOT NULL AUTO_INCREMENT,
+  `nombre` varchar(50) DEFAULT NULL,
+  PRIMARY KEY (`no_control`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci |
++---------+---------------------------------------------------------------------
+--------------------------------------------------------------------------------
+----------------------------------------------------------+
+1 row in set (0.0031 sec)
+MySQL [localhost ssl/eva_1] SQL> desc alumnos;
++------------+-------------+------+-----+---------+----------------+
+| Field      | Type        | Null | Key | Default | Extra          |
++------------+-------------+------+-----+---------+----------------+
+| no_control | int(11)     | NO   | PRI | NULL    | auto_increment |
+| nombre     | varchar(50) | YES  |     | NULL    |                |
++------------+-------------+------+-----+---------+----------------+
+2 rows in set (0.0109 sec)
+MySQL [localhost ssl/eva_1] SQL> insert into alumnos(no_control)
+                              -> values(8);
+Query OK, 1 row affected (0.1200 sec)
+MySQL [localhost ssl/eva_1] SQL> insert into alumnos(no_control)
+                              -> values(10, 'Yess');
+ERROR: 1136 (21S01): Column count doesn't match value count at row 1
+MySQL [localhost ssl/eva_1] SQL> select * from alumnos;
++------------+--------+
+| no_control | nombre |
++------------+--------+
+|          8 | NULL   |
++------------+--------+
+1 row in set (0.0022 sec)
+MySQL [localhost ssl/eva_1] SQL> insert into alumnos(nombre)
+                              -> values('Yessica', 'Eduardo');
+ERROR: 1136 (21S01): Column count doesn't match value count at row 1
+MySQL [localhost ssl/eva_1] SQL>

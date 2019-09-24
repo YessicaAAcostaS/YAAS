@@ -1,0 +1,283 @@
+MySQL Shell 8.0.17
+
+Copyright (c) 2016, 2019, Oracle and/or its affiliates. All rights reserved.
+Oracle is a registered trademark of Oracle Corporation and/or its affiliates.
+Other names may be trademarks of their respective owners.
+
+Type '\help' or '\?' for help; '\quit' to exit.
+MySQL JS> \sql
+Switching to SQL mode... Commands end with ;
+MySQL SQL> \connect --mc root@localhost
+Creating a Classic session to 'root@localhost'
+Fetching schema names for autocompletion... Press ^C to stop.
+Your MySQL connection id is 8
+Server version: 8.0.17 MySQL Community Server - GPL
+No default schema selected; type \use <schema> to set one.
+MySQL [localhost ssl] SQL> \use eva_1
+Default schema set to `eva_1`.
+Fetching table and column names from `eva_1` for auto-completion... Press ^C to
+stop.
+MySQL [localhost ssl/eva_1] SQL> show tables;
++------------------+
+| Tables_in_eva_1  |
++------------------+
+| alumnos          |
+| carreras         |
+| country          |
+| materias         |
+| materias2        |
+| paises           |
+| prueba           |
+| prueba_copia     |
+| prueba_copia_dat |
+| subjects         |
++------------------+
+10 rows in set (0.0079 sec)
+MySQL [localhost ssl/eva_1] SQL> create table clientes(
+                              -> values
+                              -> ^C
+MySQL [localhost ssl/eva_1] SQL> create table clientes(
+                              -> cliente_id int not null key,
+                              -> nombre varchar(50)^C
+MySQL [localhost ssl/eva_1] SQL> create table clientes(
+                              -> cliente_id int not null auto_increment key,
+                              -> nombre varchar(50));
+Query OK, 0 rows affected (0.9489 sec)
+MySQL [localhost ssl/eva_1] SQL> create table ventas(
+                              -> venta_id int not null auto_increment key,
+                              -> cliente_id int not null
+                              -> foreign key
+                              -> references clientes(cliente_id)
+                              -> on delete cascade
+                              -> on update cascade);
+ERROR: 1064 (42000): You have an error in your SQL syntax; check the manual that
+ corresponds to your MySQL server version for the right syntax to use near 'fore
+ign key
+references clientes(cliente_id)
+on delete cascade
+on update cascade)' at line 4
+MySQL [localhost ssl/eva_1] SQL> create table ventas(
+                              -> venta_id int not null auto_increment key,
+                              -> cliente_id int not null
+                              -> foreign key(cliente_id)
+                              -> create table ventas( venta_id int not null auto
+_increment key, cliente_id int not null foreign key references clientes(cliente_
+id) on delete cascade on update cascade);^C
+MySQL [localhost ssl/eva_1] SQL> create table ventas(
+                              -> venta_id int not null auto_increment key,
+                              -> cliente_id int not null,
+                              -> foreign key(cliente_id)
+                              -> references clientes(cliente_id)
+                              -> on delete cascade
+                              -> on update cascade);
+Query OK, 0 rows affected (0.9055 sec)
+MySQL [localhost ssl/eva_1] SQL> show create table ventas;
++--------+----------------------------------------------------------------------
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+-----------------------------------------------------+
+| Table  | Create Table
+
+
+
+                                                     |
++--------+----------------------------------------------------------------------
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+-----------------------------------------------------+
+| ventas | CREATE TABLE `ventas` (
+  `venta_id` int(11) NOT NULL AUTO_INCREMENT,
+  `cliente_id` int(11) NOT NULL,
+  PRIMARY KEY (`venta_id`),
+  KEY `cliente_id` (`cliente_id`),
+  CONSTRAINT `ventas_ibfk_1` FOREIGN KEY (`cliente_id`) REFERENCES `clientes` (`
+cliente_id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci |
++--------+----------------------------------------------------------------------
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+-----------------------------------------------------+
+1 row in set (0.0962 sec)
+MySQL [localhost ssl/eva_1] SQL> insert into ventas(cliente_id)
+                              -> values(5);
+ERROR: 1452 (23000): Cannot add or update a child row: a foreign key constraint
+fails (`eva_1`.`ventas`, CONSTRAINT `ventas_ibfk_1` FOREIGN KEY (`cliente_id`) R
+EFERENCES `clientes` (`cliente_id`) ON DELETE CASCADE ON UPDATE CASCADE)
+MySQL [localhost ssl/eva_1] SQL> insert into clientes(
+                              -> nombre)
+                              -> values('Yessica');
+Query OK, 1 row affected (0.3207 sec)
+MySQL [localhost ssl/eva_1] SQL> select * from clientes;
++------------+---------+
+| cliente_id | nombre  |
++------------+---------+
+|          1 | Yessica |
++------------+---------+
+1 row in set (0.0029 sec)
+MySQL [localhost ssl/eva_1] SQL> insert into clientes( nombre) values('Yessica')
+                                 ^C
+MySQL [localhost ssl/eva_1] SQL>
+MySQL [localhost ssl/eva_1] SQL> insert into clientes(nombre)
+                              -> values('Eduardo');
+Query OK, 1 row affected (0.1524 sec)
+MySQL [localhost ssl/eva_1] SQL> insert into ventas(cliente_id)
+                              -> values(1);
+Query OK, 1 row affected (0.1152 sec)
+MySQL [localhost ssl/eva_1] SQL> insert into ventas(cliente_id) values(2);
+Query OK, 1 row affected (0.1448 sec)
+MySQL [localhost ssl/eva_1] SQL> select * from ventas;
++----------+------------+
+| venta_id | cliente_id |
++----------+------------+
+|        2 |          1 |
+|        3 |          2 |
++----------+------------+
+2 rows in set (0.0032 sec)
+MySQL [localhost ssl/eva_1] SQL> select * from ventas order by venta_id;
++----------+------------+
+| venta_id | cliente_id |
++----------+------------+
+|        2 |          1 |
+|        3 |          2 |
++----------+------------+
+2 rows in set (0.0022 sec)
+MySQL [localhost ssl/eva_1] SQL> insert into ventas(cliente_id) values(1);
+Query OK, 1 row affected (0.1018 sec)
+MySQL [localhost ssl/eva_1] SQL> insert into ventas(cliente_id) values(2);
+Query OK, 1 row affected (0.1564 sec)
+MySQL [localhost ssl/eva_1] SQL> select * from ventas;
++----------+------------+
+| venta_id | cliente_id |
++----------+------------+
+|        2 |          1 |
+|        4 |          1 |
+|        3 |          2 |
+|        5 |          2 |
++----------+------------+
+4 rows in set (0.0027 sec)
+MySQL [localhost ssl/eva_1] SQL> insert into ventas(cliente_id) values(1);
+Query OK, 1 row affected (0.2467 sec)
+MySQL [localhost ssl/eva_1] SQL> delete from clientes
+                              -> where cliente_id = 1;
+Query OK, 1 row affected (0.1354 sec)
+MySQL [localhost ssl/eva_1] SQL> select * from clientes;
++------------+---------+
+| cliente_id | nombre  |
++------------+---------+
+|          2 | Eduardo |
++------------+---------+
+1 row in set (0.0030 sec)
+MySQL [localhost ssl/eva_1] SQL> select * from ventas;
++----------+------------+
+| venta_id | cliente_id |
++----------+------------+
+|        3 |          2 |
+|        5 |          2 |
++----------+------------+
+2 rows in set (0.0031 sec)
+MySQL [localhost ssl/eva_1] SQL> update clientes
+                              -> set
+                              -> cliente_id = 5
+                              -> where cliente_id = 2;
+Query OK, 1 row affected (0.1875 sec)
+
+Rows matched: 1  Changed: 1  Warnings: 0
+MySQL [localhost ssl/eva_1] SQL> select * from clientes;
++------------+---------+
+| cliente_id | nombre  |
++------------+---------+
+|          5 | Eduardo |
++------------+---------+
+1 row in set (0.0032 sec)
+MySQL [localhost ssl/eva_1] SQL> select * from ventas;
++----------+------------+
+| venta_id | cliente_id |
++----------+------------+
+|        3 |          5 |
+|        5 |          5 |
++----------+------------+
+2 rows in set (0.0036 sec)
+MySQL [localhost ssl/eva_1] SQL> create table ventas2
+                              -> (
+                              -> venta_id int not null auto_increment key,
+                              -> cliente_id int not null,
+                              -> foreign key(cliente_id)
+                              -> references clientes(cliente_id)
+                              -> on delete restrict
+                              -> on update restrict
+                              -> );
+Query OK, 0 rows affected (0.9035 sec)
+MySQL [localhost ssl/eva_1] SQL> insert into ventas2
+                              -> (cliente_id)
+                              -> values(5);
+Query OK, 1 row affected (0.1695 sec)
+MySQL [localhost ssl/eva_1] SQL> insert into ventas2(cliente_id)
+                              -> ;
+ERROR: 1064 (42000): You have an error in your SQL syntax; check the manual that
+ corresponds to your MySQL server version for the right syntax to use near '' at
+ line 1
+MySQL [localhost ssl/eva_1] SQL> insert into ventas2(cliente_id);
+ERROR: 1064 (42000): You have an error in your SQL syntax; check the manual that
+ corresponds to your MySQL server version for the right syntax to use near '' at
+ line 1
+MySQL [localhost ssl/eva_1] SQL> insert into ventas2(cliente_id)
+                              -> values(1);
+ERROR: 1452 (23000): Cannot add or update a child row: a foreign key constraint
+fails (`eva_1`.`ventas2`, CONSTRAINT `ventas2_ibfk_1` FOREIGN KEY (`cliente_id`)
+ REFERENCES `clientes` (`cliente_id`) ON DELETE RESTRICT ON UPDATE RESTRICT)
+MySQL [localhost ssl/eva_1] SQL> select * from ventas2;
++----------+------------+
+| venta_id | cliente_id |
++----------+------------+
+|        1 |          5 |
++----------+------------+
+1 row in set (0.0031 sec)
+MySQL [localhost ssl/eva_1] SQL> insert into ventas2(cliente_id)
+                              -> values(4);
+ERROR: 1452 (23000): Cannot add or update a child row: a foreign key constraint
+fails (`eva_1`.`ventas2`, CONSTRAINT `ventas2_ibfk_1` FOREIGN KEY (`cliente_id`)
+ REFERENCES `clientes` (`cliente_id`) ON DELETE RESTRICT ON UPDATE RESTRICT)
+MySQL [localhost ssl/eva_1] SQL> delete from clientes
+                              -> where cliente_id = 5;
+ERROR: 1451 (23000): Cannot delete or update a parent row: a foreign key constra
+int fails (`eva_1`.`ventas2`, CONSTRAINT `ventas2_ibfk_1` FOREIGN KEY (`cliente_
+id`) REFERENCES `clientes` (`cliente_id`) ON DELETE RESTRICT ON UPDATE RESTRICT)
+
+MySQL [localhost ssl/eva_1] SQL> insert into ventas2(cliente_id)
+                              -> values(100);
+ERROR: 1452 (23000): Cannot add or update a child row: a foreign key constraint
+fails (`eva_1`.`ventas2`, CONSTRAINT `ventas2_ibfk_1` FOREIGN KEY (`cliente_id`)
+ REFERENCES `clientes` (`cliente_id`) ON DELETE RESTRICT ON UPDATE RESTRICT)
+MySQL [localhost ssl/eva_1] SQL> create table carrera(
+                              -> carrera_id int not null auto_increment key,
+                              -> nombre varchar(50));
+Query OK, 0 rows affected (0.5926 sec)
+MySQL [localhost ssl/eva_1] SQL> create table materias(
+                              -> materia_id int not null auto_increment key,
+                              -> nombre varchar(50)
+                              -> foreign key(carrera_id)
+                              -> references carrera(carrera_id)
+                              -> on delete restrict
+                              -> on update restrict);
+ERROR: 1064 (42000): You have an error in your SQL syntax; check the manual that
+ corresponds to your MySQL server version for the right syntax to use near 'fore
+ign key(carrera_id)
+references carrera(carrera_id)
+on delete restrict
+on upd' at line 4
+MySQL [localhost ssl/eva_1] SQL> create table materias(
+                              -> materia_id int not null auto_increment key,
+                              -> nombre varchar(50),
+                              -> foreign key(carrera_id)
+                              -> references carrera(carrera_id)
+                              -> on delete cascade
+                              -> on update cascade);
+ERROR: 1050 (42S01): Table 'materias' already exists
+MySQL [localhost ssl/eva_1] SQL> create table materias( materia_id int not null
+auto_increment key, nombre varchar(50), foreign key(carrera_id) references carre
+ra(carrera_id) on delete cascade on update cascade);
+ERROR: 1050 (42S01): Table 'materias' already exists
+MySQL [localhost ssl/eva_1] SQL>
